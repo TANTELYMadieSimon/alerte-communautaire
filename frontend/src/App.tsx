@@ -1,35 +1,61 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+"use client"
 
-function App() {
-  const [count, setCount] = useState(0)
+import { useState, useEffect } from "react"
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom"
+import Login from "./components/Login"
+import AdminDashboard from "./components/AdminDashboard"
+import UserDashboard from "./components/UserDashboard"
+import "./App.css"
+
+export type UserRole = "admin" | "user" | null
+
+export default function App() {
+  const [userRole, setUserRole] = useState<UserRole>(null)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+
+  useEffect(() => {
+    // Check if user is already logged in
+    const savedRole = localStorage.getItem("userRole")
+    const savedAuth = localStorage.getItem("isAuthenticated")
+
+    if (savedRole && savedAuth === "true") {
+      setUserRole(savedRole as UserRole)
+      setIsAuthenticated(true)
+    }
+  }, [])
+
+  const handleLogin = (role: UserRole) => {
+    setUserRole(role)
+    setIsAuthenticated(true)
+    localStorage.setItem("userRole", role!)
+    localStorage.setItem("isAuthenticated", "true")
+  }
+
+  const handleLogout = () => {
+    setUserRole(null)
+    setIsAuthenticated(false)
+    localStorage.removeItem("userRole")
+    localStorage.removeItem("isAuthenticated")
+  }
+
+  if (!isAuthenticated) {
+    return <Login onLogin={handleLogin} />
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <Router>
+      <div className="app">
+        <Routes>
+          <Route
+            path="/admin/*"
+            element={
+              userRole === "admin" ? <AdminDashboard onLogout={handleLogout} /> : <Navigate to="/user" replace />
+            }
+          />
+          <Route path="/user/*" element={<UserDashboard onLogout={handleLogout} />} />
+          <Route path="/" element={<Navigate to={userRole === "admin" ? "/admin" : "/user"} replace />} />
+        </Routes>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </Router>
   )
 }
-
-export default App

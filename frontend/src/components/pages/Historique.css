@@ -1,0 +1,161 @@
+.historique-container {
+  padding: 1rem;
+  max-width: 100%;
+}
+
+.tab-header {
+  display: flex;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tab-header button {
+  flex: 1;
+  padding: 1rem;
+  border: none;
+  background: #f8f9fa;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.tab-header button.active {
+  background: #4a90e2;
+  color: white;
+}
+
+.historique-content {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.historique-content h2 {
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.chart-container {
+  margin-bottom: 2rem;
+}
+
+.chart {
+  display: flex;
+  height: 300px;
+  align-items: end;
+  gap: 1rem;
+}
+
+.y-axis {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  padding-right: 1rem;
+  color: #666;
+  font-size: 14px;
+}
+
+.bars {
+  display: flex;
+  gap: 1rem;
+  height: 100%;
+  align-items: end;
+  flex: 1;
+}
+
+.bar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  height: 100%;
+}
+
+.bar {
+  width: 100%;
+  max-width: 60px;
+  border-radius: 4px 4px 0 0;
+  transition: all 0.3s ease;
+}
+
+.bar-label {
+  margin-top: 0.5rem;
+  text-align: center;
+  font-size: 12px;
+  color: #666;
+  transform: rotate(-45deg);
+  white-space: nowrap;
+}
+
+.pdf-btn {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  float: right;
+}
+
+.annonce-content {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.annonce-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.annonce-item {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+  border-left: 4px solid #4a90e2;
+}
+
+.annonce-item h3 {
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.annonce-item p {
+  color: #666;
+  margin-bottom: 0.5rem;
+}
+
+.date {
+  font-size: 12px;
+  color: #999;
+}
