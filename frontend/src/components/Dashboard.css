@@ -23,29 +23,32 @@
 }
 
 .logout-btn {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(241, 8, 8, 1);
   color: white;
   border: none;
-  padding: 8px 16px;
+  right: 0;
+  padding: 1px 16px ;
+  height: 50px;
   border-radius: 6px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
 .logout-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(16, 240, 65, 1);
 }
 
 .dashboard-content {
+
   flex: 1;
   padding: 1rem;
   overflow-y: auto;
-  margin-bottom: 80px; /* Space for bottom nav */
+  margin-top: 80px; /* Space for bottom nav */
 }
 
 .bottom-nav {
   position: fixed;
-  bottom: 0;
+  top: 0;
   left: 0;
   right: 0;
   background: #2c5aa0;
