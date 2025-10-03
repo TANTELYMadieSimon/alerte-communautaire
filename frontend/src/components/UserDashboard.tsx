@@ -32,10 +32,21 @@ export default function UserDashboard({ onLogout }: UserDashboardProps) {
   return (
     <div className="dashboard">
       <header className="dashboard-header">
-        <h1>Utilisateur - Alerte Communautaire</h1>
+         <nav className="bottom-nav">
+        {tabs.map((tab) => (
+          <button
+            key={tab.id}
+            className={`nav-item ${currentTab === tab.id ? "active" : ""}`}
+            onClick={() => handleTabClick(tab.id)}
+          >
+            <span className="nav-icon">{tab.icon}</span>
+            <span className="nav-label">{tab.label}</span>
+          </button>
+        ))}
         <button onClick={onLogout} className="logout-btn">
           Déconnexion
         </button>
+      </nav>
       </header>
 
       <main className="dashboard-content">
@@ -48,19 +59,6 @@ export default function UserDashboard({ onLogout }: UserDashboardProps) {
           <Route path="/liste" element={<ListeAlerte />} />
         </Routes>
       </main>
-
-      <nav className="bottom-nav">
-        {tabs.map((tab) => (
-          <button
-            key={tab.id}
-            className={`nav-item ${currentTab === tab.id ? "active" : ""}`}
-            onClick={() => handleTabClick(tab.id)}
-          >
-            <span className="nav-icon">{tab.icon}</span>
-            <span className="nav-label">{tab.label}</span>
-          </button>
-        ))}
-      </nav>
     </div>
   )
 }

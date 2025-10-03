@@ -1,8 +1,8 @@
 "use client"
 
 import type React from "react"
-
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import axios from "axios"
 import "./AjoutAlerte.css"
 
 export default function AjoutAlerte() {
@@ -10,6 +10,7 @@ export default function AjoutAlerte() {
   const [description, setDescription] = useState("")
   const [date, setDate] = useState(new Date().toISOString().split("T")[0])
   const [photo, setPhoto] = useState<File | null>(null)
+  const [adresse, setAdresse] = useState("Non précisé")  // pour stocker la géoloc
 
   const alertTypes = [
     { value: "inondation", label: "Inondation" },
@@ -17,22 +18,58 @@ export default function AjoutAlerte() {
     { value: "electricite", label: "Électricité" },
   ]
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+  // Récupérer la géolocalisation au montage
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords
+          // Option 1: envoyer juste lat/lng comme adresse
+          setAdresse(`Lat: ${latitude.toFixed(5)}, Lng: ${longitude.toFixed(5)}`)
 
+          // Option 2: reverse-geocoding avec API (ex: OpenStreetMap Nominatim)
+          /*
+          try {
+            const res = await axios.get(
+              `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+            )
+            setAdresse(res.data.display_name)
+          } catch (err) {
+            console.error("Erreur reverse geocoding :", err)
+          }
+          */
+        },
+        (error) => {
+          console.error("Erreur géolocalisation :", error)
+        }
+      )
+    }
+  }, [])
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
     if (!selectedType || !description) {
       alert("Veuillez remplir tous les champs obligatoires")
       return
     }
 
-    // Simulate alert submission
-    alert("Alerte ajoutée avec succès!")
-
-    // Reset form
-    setSelectedType("")
-    setDescription("")
-    setDate(new Date().toISOString().split("T")[0])
-    setPhoto(null)
+    try {
+      await axios.post("http://127.0.0.1:8000/api/alertes/", {
+        titre: selectedType,
+        description: description,
+        type_alerte: selectedType,
+        utilisateur: 1, // id utilisateur connecté
+        adresse: adresse
+      })
+      alert("✅ Alerte ajoutée avec succès !")
+      setSelectedType("")
+      setDescription("")
+      setDate(new Date().toISOString().split("T")[0])
+      setPhoto(null)
+    } catch (error: any) {
+      console.error("Erreur API :", error.response?.data || error.message)
+      alert("❌ Erreur lors de l'ajout de l'alerte")
+    }
   }
 
   const handleCancel = () => {
@@ -41,7 +78,6 @@ export default function AjoutAlerte() {
     setDate(new Date().toISOString().split("T")[0])
     setPhoto(null)
   }
-
   return (
     <div className="ajout-alerte-container">
       <div className="tab-header">
@@ -83,6 +119,12 @@ export default function AjoutAlerte() {
           <label>Date :</label>
           <input type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
         </div>
+
+        <div className="form-group">
+          <label>Adresse :</label>
+          <input type="text" value={adresse} readOnly />
+        </div>
+
 
         <div className="form-group">
           <label>Photo :</label>
