@@ -31,7 +31,8 @@ export default function Login({ onLogin }: LoginProps) {
   return (
     <div className="login-container">
       <div className="login-card">
-        <h1>Alerte Communautaire</h1>
+        <img src="/alerte.png" alt="Alerte" className="icon" />
+        <h1>ToliAlerte</h1>
         <form onSubmit={handleSubmit}>
           <div className="role-selector">
             <button
