@@ -13,38 +13,38 @@ export default function AjoutAlerte() {
   const [adresse, setAdresse] = useState("Non précisé")  // pour stocker la géoloc
 
   const alertTypes = [
-    { value: "inondation", label: "Inondation" },
-    { value: "incendie", label: "Incendie" },
-    { value: "electricite", label: "Électricité" },
+  { value: "inondation", label: "Inondation" },
+  { value: "incendie", label: "Incendie" },
+  { value: "vol", label: "Vol" },
+  { value: "autre", label: "Autre" },
   ]
 
-  // Récupérer la géolocalisation au montage
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          const { latitude, longitude } = position.coords
-          // Option 1: envoyer juste lat/lng comme adresse
-          setAdresse(`Lat: ${latitude.toFixed(5)}, Lng: ${longitude.toFixed(5)}`)
+ useEffect(() => {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords
 
-          // Option 2: reverse-geocoding avec API (ex: OpenStreetMap Nominatim)
-          /*
-          try {
-            const res = await axios.get(
-              `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
-            )
-            setAdresse(res.data.display_name)
-          } catch (err) {
-            console.error("Erreur reverse geocoding :", err)
-          }
-          */
-        },
-        (error) => {
-          console.error("Erreur géolocalisation :", error)
+        try {
+          const res = await axios.get(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+          )
+
+          // Exemple : "Bandobiby, Toliara, Madagascar"
+          const locationName = res.data.display_name || `Lat: ${latitude}, Lng: ${longitude}`
+          setAdresse(locationName)
+        } catch (err) {
+          console.error("Erreur reverse geocoding :", err)
+          setAdresse(`Lat: ${latitude.toFixed(5)}, Lng: ${longitude.toFixed(5)}`)
         }
-      )
-    }
-  }, [])
+      },
+      (error) => {
+        console.error("Erreur géolocalisation :", error)
+      }
+    )
+  }
+}, [])
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -55,23 +55,21 @@ export default function AjoutAlerte() {
 
     try {
       await axios.post("http://127.0.0.1:8000/api/alertes/", {
-        titre: selectedType,
+        // NE PAS envoyer 'titre'
         description: description,
         type_alerte: selectedType,
-        utilisateur: 1, // id utilisateur connecté
         adresse: adresse
+        // NE PAS envoyer 'utilisateur' - le backend le gère
       })
-      alert("✅ Alerte ajoutée avec succès !")
+      alert("Alerte ajoutée avec succès !")
       setSelectedType("")
       setDescription("")
-      setDate(new Date().toISOString().split("T")[0])
-      setPhoto(null)
+      setAdresse("")
     } catch (error: any) {
       console.error("Erreur API :", error.response?.data || error.message)
-      alert("❌ Erreur lors de l'ajout de l'alerte")
+      alert("Erreur lors de l'ajout de l'alerte")
     }
   }
-
   const handleCancel = () => {
     setSelectedType("")
     setDescription("")

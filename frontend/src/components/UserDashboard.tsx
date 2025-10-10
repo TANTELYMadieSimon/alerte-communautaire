@@ -15,7 +15,7 @@ interface UserDashboardProps {
 interface Tab {
   id: string
   label: string
-  icon: string
+  icon: React.ReactNode;
 }
 
 export default function UserDashboard({ onLogout }: UserDashboardProps) {

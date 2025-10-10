@@ -14,15 +14,28 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.contrib import admin
 from django.urls import path, include
+from django.http import JsonResponse
 from rest_framework import routers
 from alerts.views import AlerteViewSet
 
+# Configuration du router
 router = routers.DefaultRouter()
 router.register(r'alertes', AlerteViewSet, basename='alerte')
 
-urlpatterns = [
-    path('api/', include(router.urls)),
-    # ... admin, auth, etc.
-]
+# Vue pour la page d'accueil
+def home(request):
+    return JsonResponse({
+        'message': 'Bienvenue sur l\'API Alerte Communautaire',
+        'endpoints': {
+            'alertes': '/api/alertes/',
+            'admin': '/admin/',
+        }
+    })
 
+urlpatterns = [
+    path('admin/', admin.site.urls),  # Correction : ajout de admin.site.urls
+    path('api/', include(router.urls)),  # Correction : utilisation du router
+    path('', home),  # Page d'accueil
+]

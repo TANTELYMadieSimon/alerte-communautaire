@@ -15,7 +15,7 @@ interface AdminDashboardProps {
 interface Tab {
   id: string
   label: string
-  icon: string
+  icon: React.ReactNode;
 }
 
 export default function AdminDashboard({ onLogout }: AdminDashboardProps) {

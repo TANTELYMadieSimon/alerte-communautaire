@@ -41,9 +41,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # Mes apps
-    'users',
-    'alerts',
-    'announcements',
+    'users.apps.UsersConfig',
+    'alerts.apps.AlertsConfig',
+    'announcements.apps.AnnouncementsConfig',
+  
 ]
 
 MIDDLEWARE = [

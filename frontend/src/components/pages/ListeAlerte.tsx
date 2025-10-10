@@ -1,59 +1,61 @@
-import { useEffect, useState } from "react"
-import axios from "axios"
-
-interface Alert {
-  id: number
-  titre: string
-  description: string
-  type_alerte: "inondation" | "incendie" | "electricite" | "autre"
-  date_creation: string
-  statut: string
-  utilisateur_nom: string
-  adresse: string
-}
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function ListeAlerte() {
-  const [alerts, setAlerts] = useState<Alert[]>([])
+  const [alerts, setAlerts] = useState<Alert[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios.get("http://127.0.0.1:8000/api/alertes/")
-      .then((res) => {
-        setAlerts(res.data)
-      })
-      .catch((err) => console.error(err))
-  }, [])
+      .then((res) => setAlerts(res.data))
+      .catch((err) => console.error(err));
+  }, []);
+
+  // Supprimer alerte
+  const handleDelete = async (id: number) => {
+    if (!confirm("Voulez-vous vraiment supprimer cette alerte ?")) return;
+    try {
+      await axios.delete(`http://127.0.0.1:8000/api/alertes/${id}/`);
+      setAlerts(alerts.filter((alert) => alert.id !== id));
+      alert("Alerte supprimée !");
+    } catch (err) {
+      console.error(err);
+      alert("Erreur lors de la suppression");
+    }
+  };
+
+  // Modifier alerte (redirection vers formulaire)
+  const handleEdit = (id: number) => {
+    navigate(`/user/ajout?id=${id}`); // tu peux réutiliser ton formulaire AjoutAlerte pour modifier
+  };
 
   return (
-    <div className="liste-alerte-container">
-      <div className="liste-header">
-        <h2>Liste d'alerte</h2>
-      </div>
-
-      <div className="alerts-list">
-        {alerts.map((alert) => (
-          <div key={alert.id} className="alert-card">
-            <div className="alert-header">
-              <div className="alert-icon">⚠️</div>
-              <div className="alert-main-info">
-                <h3>{alert.titre}</h3>
-                <p className="location">Lieu: {alert.adresse}</p>
-                <p className="description">{alert.description}</p>
-              </div>
-            </div>
-
-            <div className="alert-footer">
-              <span className="date">{new Date(alert.date_creation).toLocaleDateString()}</span>
-              <span className="status">{alert.statut}</span>
+    <div className="alerts-list">
+      {alerts.map((alert) => (
+        <div key={alert.id} className="alert-card">
+          <div className="alert-header">
+            <div className="alert-icon">⚠️</div>
+            <div className="alert-main-info">
+              <h3>{alert.type_alerte}</h3>
+              <p
+                style={{ cursor: "pointer", color: "blue", textDecoration: "underline" }}
+                onClick={() => navigate(`/user/carte?lat=${alert.lat}&lng=${alert.lng}&nomLieu=${encodeURIComponent(alert.adresse)}`)}
+              >
+                Lieu: {alert.adresse}
+              </p>
+              <p>{alert.description}</p>
             </div>
           </div>
-        ))}
-      </div>
 
-      {alerts.length === 0 && (
-        <div className="no-alerts">
-          <p>Aucune alerte disponible</p>
+          <div className="alert-footer">
+            <span>{new Date(alert.date_creation).toLocaleDateString()}</span>
+            <div className="alert-actions">
+              <button onClick={() => handleEdit(alert.id)}>Modifier</button>
+              <button onClick={() => handleDelete(alert.id)}>Supprimer</button>
+            </div>
+          </div>
         </div>
-      )}
+      ))}
     </div>
-  )
+  );
 }
