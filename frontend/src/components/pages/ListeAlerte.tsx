@@ -1,32 +1,45 @@
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+
+// ✅ Définir le type de données pour une alerte
+interface Alert {
+  id: number;
+  type_alerte: string;
+  description: string;
+  adresse: string;
+  latitude?: number;
+  longitude?: number;
+  date_creation: string;
+}
 
 export default function ListeAlerte() {
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get("http://127.0.0.1:8000/api/alertes/")
+    axios
+      .get("http://127.0.0.1:8000/api/alertes/")
       .then((res) => setAlerts(res.data))
       .catch((err) => console.error(err));
   }, []);
 
-  // Supprimer alerte
+  // ✅ Supprimer une alerte
   const handleDelete = async (id: number) => {
-    if (!confirm("Voulez-vous vraiment supprimer cette alerte ?")) return;
+    if (!window.confirm("Voulez-vous vraiment supprimer cette alerte ?")) return;
     try {
       await axios.delete(`http://127.0.0.1:8000/api/alertes/${id}/`);
-      setAlerts(alerts.filter((alert) => alert.id !== id));
-      alert("Alerte supprimée !");
+      setAlerts((prev) => prev.filter((a) => a.id !== id));
+      window.alert("Alerte supprimée !");
     } catch (err) {
       console.error(err);
-      alert("Erreur lors de la suppression");
+      window.alert("Erreur lors de la suppression");
     }
   };
 
-  // Modifier alerte (redirection vers formulaire)
+  // ✅ Rediriger pour modifier une alerte
   const handleEdit = (id: number) => {
-    navigate(`/user/ajout?id=${id}`); // tu peux réutiliser ton formulaire AjoutAlerte pour modifier
+    navigate(`/user/ajout?id=${id}`);
   };
 
   return (
@@ -39,9 +52,15 @@ export default function ListeAlerte() {
               <h3>{alert.type_alerte}</h3>
               <p
                 style={{ cursor: "pointer", color: "blue", textDecoration: "underline" }}
-                onClick={() => navigate(`/user/carte?lat=${alert.lat}&lng=${alert.lng}&nomLieu=${encodeURIComponent(alert.adresse)}`)}
+                onClick={() =>
+                  navigate(
+                    `/user/carte?lat=${alert.latitude}&lng=${alert.longitude}&nomLieu=${encodeURIComponent(
+                      alert.adresse
+                    )}`
+                  )
+                }
               >
-                Lieu: {alert.adresse}
+                Lieu : {alert.adresse}
               </p>
               <p>{alert.description}</p>
             </div>
