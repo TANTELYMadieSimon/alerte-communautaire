@@ -50,32 +50,35 @@ export default function AjoutAlerte() {
 
   // ✅ Envoi de l'alerte vers le backend
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  e.preventDefault();
 
-    if (!selectedType || !description) {
-      alert("Veuillez remplir tous les champs obligatoires")
-      return
-    }
-
-    try {
-      await axios.post("http://127.0.0.1:8000/api/alertes/", {
-        description,
-        type_alerte: selectedType,
-        adresse,
-        latitude,
-        longitude,
-      })
-      alert("Alerte ajoutée avec succès !")
-      setSelectedType("")
-      setDescription("")
-      setAdresse("")
-      setLatitude(null)
-      setLongitude(null)
-    } catch (error: any) {
-      console.error("Erreur API :", error.response?.data || error.message)
-      alert("Erreur lors de l'ajout de l'alerte")
-    }
+  if (!selectedType || !description) {
+    alert("Veuillez remplir tous les champs obligatoires");
+    return;
   }
+
+  const formData = new FormData();
+  formData.append("description", description);
+  formData.append("type_alerte", selectedType);
+  formData.append("adresse", adresse);
+  if (latitude) formData.append("latitude", latitude.toString());
+  if (longitude) formData.append("longitude", longitude.toString());
+  if (photo) formData.append("photo", photo); // ✅ ajout photo facultative
+
+  try {
+    await axios.post("http://127.0.0.1:8000/api/alertes/", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    alert("Alerte ajoutée avec succès !");
+    setSelectedType("");
+    setDescription("");
+    setPhoto(null);
+  } catch (error: any) {
+    console.error("Erreur API :", error.response?.data || error.message);
+    alert("Erreur lors de l'ajout de l'alerte");
+  }
+};
+
 
   const handleCancel = () => {
     setSelectedType("")

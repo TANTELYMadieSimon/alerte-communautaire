@@ -19,6 +19,8 @@ from django.urls import path, include
 from django.http import JsonResponse
 from rest_framework import routers
 from alerts.views import AlerteViewSet
+from django.conf import settings
+from django.conf.urls.static import static
 
 # Configuration du router
 router = routers.DefaultRouter()
@@ -39,3 +41,5 @@ urlpatterns = [
     path('api/', include(router.urls)),  # Correction : utilisation du router
     path('', home),  # Page d'accueil
 ]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

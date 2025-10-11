@@ -11,7 +11,22 @@ interface Alert {
   latitude?: number;
   longitude?: number;
   date_creation: string;
+  photo?: string;
 }
+// ✅ Icône selon le type d’alerte
+const getIcon = (type: string) => {
+  switch (type.toLowerCase()) {
+    case "inondation":
+      return "🌊";
+    case "incendie":
+      return "🔥";
+    case "électricité":
+    case "electricite":
+      return "⚡";
+    default:
+      return "⚠️";
+  }
+};
 
 export default function ListeAlerte() {
   const [alerts, setAlerts] = useState<Alert[]>([]);
@@ -47,7 +62,7 @@ export default function ListeAlerte() {
       {alerts.map((alert) => (
         <div key={alert.id} className="alert-card">
           <div className="alert-header">
-            <div className="alert-icon">⚠️</div>
+            <div className="alert-icon">{getIcon(alert.type_alerte)} {alert.type_alerte}</div>
             <div className="alert-main-info">
               <h3>{alert.type_alerte}</h3>
               <p
@@ -63,6 +78,14 @@ export default function ListeAlerte() {
                 Lieu : {alert.adresse}
               </p>
               <p>{alert.description}</p>
+              {alert.photo && (
+                <img
+                src={alert.photo}
+                alt="Alerte"
+                className="w-full h-40 object-cover rounded-lg mt-2"
+              />
+
+              )}
             </div>
           </div>
 

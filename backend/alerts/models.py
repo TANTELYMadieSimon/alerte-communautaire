@@ -16,6 +16,6 @@ class Alerte(models.Model):
     adresse = models.CharField(max_length=300, blank=True, null=True)
     latitude = models.FloatField(blank=True, null=True)
     longitude = models.FloatField(blank=True, null=True)
-    
+    photo = models.ImageField(upload_to='alertes_photos/', blank=True, null=True)  # ✅ facultative
     def __str__(self):
         return f"{self.type_alerte} - {self.description[:50]}"  # Correction ici
