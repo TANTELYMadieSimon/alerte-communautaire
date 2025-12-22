@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            line-height: 1.6; 
+            color: #333; 
+            max-width: 600px; 
+            margin: 0 auto; 
+            padding: 20px;
+        }
+        .header { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white; 
+            padding: 30px; 
+            text-align: center; 
+            border-radius: 10px 10px 0 0;
+        }
+        .content { 
+            background: #f8f9fa; 
+            padding: 30px; 
+            border-radius: 0 0 10px 10px;
+            border: 1px solid #e9ecef;
+        }
+        .alert-card {
+            background: white;
+            border-left: 4px solid #dc3545;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .badge {
+            background: #dc3545;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .button {
+            display: inline-block;
+            background: #007bff;
+            color: white;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #dee2e6;
+            color: #6c757d;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🚨 Nouvelle Alerte ToliAlerte</h1>
+        <p>Une nouvelle alerte nécessite votre attention</p>
+    </div>
+    
+    <div class="content">
+        <h2>Détails de l'alerte :</h2>
+        
+        <div class="alert-card">
+            <span class="badge">{{ type_alerte_display }}</span>
+            <h3 style="margin-top: 10px; color: #dc3545;">{{ alerte.type_alerte|title }}</h3>
+            <p><strong>Description :</strong> {{ alerte.description }}</p>
+            <p><strong>Lieu :</strong> {{ alerte.adresse }}</p>
+            <p><strong>Date :</strong> {{ date_creation }}</p>
+            {% if alerte.utilisateur_nom %}
+            <p><strong>Signalé par :</strong> {{ alerte.utilisateur_nom }}</p>
+            {% endif %}
+        </div>
+        
+        <p><strong>Action requise :</strong></p>
+        <ul>
+            <li>Vérifier les détails de l'alerte</li>
+            <li>Prendre les mesures nécessaires</li>
+            <li>Mettre à jour le statut si nécessaire</li>
+        </ul>
+        
+        <a href="http://localhost:5173/admin-dashboard?tab=liste" class="button">
+            📋 Voir l'alerte dans le dashboard
+        </a>
+    </div>
+    
+    <div class="footer">
+        <p>Ce message a été envoyé automatiquement par le système ToliAlerte.</p>
+        <p>© 2024 ToliAlerte. Tous droits réservés.</p>
+    </div>
+</body>
+</html>

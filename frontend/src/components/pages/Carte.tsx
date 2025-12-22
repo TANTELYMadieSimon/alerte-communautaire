@@ -1,9 +1,19 @@
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 
-// Icône par défaut Leaflet
+// --- Interface des props ---
+export interface CarteProps {
+  alertParams: {
+    lat: number;
+    lng: number;
+    nomLieu: string;
+  } | null;
+  clearAlertParams: () => void;
+}
+
+// --- Correction des icônes Leaflet ---
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
@@ -11,59 +21,88 @@ L.Icon.Default.mergeOptions({
   shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
 });
 
-export default function Carte() {
-  const [searchParams] = useSearchParams();
-
-  // Si tu veux afficher une alerte spécifique envoyée depuis ListeAlerte :
-  const latParam = searchParams.get("lat");
-  const lngParam = searchParams.get("lng");
-  const nomLieu = searchParams.get("nomLieu");
-
-  const [position, setPosition] = useState<[number, number] | null>(null);
+// --- Composant interne : invalidateSize + centrage ---
+const MapFix = ({ position, nomLieu }: { position: [number, number]; nomLieu: string | undefined }) => {
+  const map = useMap();
 
   useEffect(() => {
-    if (latParam && lngParam) {
-      // 👉 Si on a reçu une alerte spécifique (depuis la liste)
-      setPosition([parseFloat(latParam), parseFloat(lngParam)]);
-    } else {
-      // 👉 Sinon, on géolocalise automatiquement l'utilisateur
-      if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition(
-          (pos) => {
-            const { latitude, longitude } = pos.coords;
-            console.log("Ta position réelle :", latitude, longitude);
-            setPosition([latitude, longitude]);
-          },
-          (err) => {
-            console.error("Erreur géoloc :", err);
-            // Si l'utilisateur refuse ou erreur => fallback sur Tuléar
-            setPosition([-23.35, 43.67]); // 🌍 Coordonnées de Tuléar
-          },
-          { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
-        );
-      } else {
-        console.error("La géolocalisation n'est pas supportée par ce navigateur");
-        setPosition([-23.35, 43.67]);
-      }
-    }
-  }, [latParam, lngParam]);
+    const timer = setTimeout(() => {
+      map.invalidateSize();
+      map.setView(position, 14);
+    }, 150);
+
+    return () => clearTimeout(timer);
+  }, [map, position]);
 
   return (
-    <div style={{ height: "100vh", width: "100%" }}>
-      {position ? (
-        <MapContainer center={position} zoom={14} style={{ height: "100%", width: "100%" }}>
-          <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution="&copy; OpenStreetMap contributors"
-          />
-          <Marker position={position}>
-            <Popup>
-              {nomLieu ? `📍 ${nomLieu}` : "📍 Vous êtes ici"}
-            </Popup>
-          </Marker>
-        </MapContainer>
+    <>
+      <TileLayer
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        attribution='&copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
+      />
+      <Marker position={position}>
+        <Popup>
+          <div className="p-2 font-semibold text-indigo-700 text-sm">
+            {nomLieu ? `Alerte: ${nomLieu}` : "Votre position actuelle"}
+          </div>
+        </Popup>
+      </Marker>
+    </>
+  );
+};
+
+// --- Composant principal ---
+export default function Carte({ alertParams }: CarteProps) {
+  const [position, setPosition] = useState<[number, number] | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  // --- Gestion de la position ---
+  useEffect(() => {
+    if (alertParams) {
+      setPosition([alertParams.lat, alertParams.lng]);
+      setLoading(false);
+      return;
+    }
+
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          setPosition([pos.coords.latitude, pos.coords.longitude]);
+          setLoading(false);
+        },
+        () => {
+          setPosition([-23.35, 43.67]); // Tuléar
+          setLoading(false);
+        },
+        { enableHighAccuracy: true, timeout: 10000 }
+      );
+    } else {
+      setPosition([-23.35, 43.67]);
+      setLoading(false);
+    }
+  }, [alertParams]); // clearAlertParams non utilisé ici
+
+  const nomLieu = alertParams?.nomLieu;
+
+  return (
+    <div className="w-full h-[85vh] relative overflow-hidden rounded-lg shadow-xl">
+      {loading || !position ? (
+        <div className="flex items-center justify-center h-full bg-gray-50">
+          <p className="text-xl font-medium text-gray-600 animate-pulse">
+            Chargement de la carte...
+          </p>
+        </div>
       ) : (
-        <p style={{ textAlign: "center", marginTop: "20px" }}>Chargement de la carte...</p>
+        <MapContainer
+          key={position.join(",")}
+          center={position}
+          zoom={14}
+          scrollWheelZoom={true}
+          style={{ height: "100%", width: "100%" }}
+          className="z-0"
+        >
+          <MapFix position={position} nomLieu={nomLieu} /> {/* CORRIGÉ ICI */}
+        </MapContainer>
       )}
     </div>
   );

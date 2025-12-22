@@ -16,6 +16,7 @@ class AlerteSerializer(serializers.ModelSerializer):
             'latitude',
             'longitude',
             'photo',
-            'utilisateur_nom'
+            'utilisateur_nom',
+            'statut'
         ]
         read_only_fields = ['id', 'date_creation']
