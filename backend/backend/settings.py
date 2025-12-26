@@ -39,9 +39,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
 
-    'users.apps.UsersConfig',
-    'alerts.apps.AlertsConfig',
-    'announcements.apps.AnnouncementsConfig',
+    'backend.users.apps.UsersConfig',
+    'backend.alerts.apps.AlertsConfig',
+    'backend.announcements.apps.AnnouncementsConfig',
 ]
 
 
@@ -78,7 +78,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'backend.wsgi.application'
-AUTH_USER_MODEL = 'users.Utilisateur'
+AUTH_USER_MODEL = 'backend.users.Utilisateur'
 
 # Database
 DATABASES = {
