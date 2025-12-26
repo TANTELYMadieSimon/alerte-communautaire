@@ -78,7 +78,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'backend.wsgi.application'
-AUTH_USER_MODEL = 'backend.users.Utilisateur'
+AUTH_USER_MODEL = 'users.Utilisateur'
 
 # Database
 DATABASES = {
