@@ -4,3 +4,4 @@ psycopg2-binary
 dj-database-url
 python-dotenv
 djangorestframework
+django-cors-headers>=4.0.0
