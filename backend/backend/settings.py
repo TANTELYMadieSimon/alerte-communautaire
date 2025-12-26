@@ -3,24 +3,32 @@ Django settings for backend project.
 """
 
 from pathlib import Path
+from dotenv import load_dotenv
 from datetime import timedelta
 import os
+import dj_database_url
 
+load_dotenv(dotenv_path=Path(__file__).resolve().parent / '.env')
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
+if not SECRET_KEY:
+    raise Exception("DJANGO_SECRET_KEY n'est pas défini ! Vérifie ton .env")
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "gestion-alerte.onrender.com",
+    "localhost",
+    "127.0.0.1"
+]
 
 # Application definition
 INSTALLED_APPS = [
-    'rest_framework',
-    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -28,14 +36,19 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # Mes apps
+    'rest_framework',
+    'corsheaders',
+
     'users.apps.UsersConfig',
     'alerts.apps.AlertsConfig',
     'announcements.apps.AnnouncementsConfig',
 ]
 
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -69,15 +82,13 @@ AUTH_USER_MODEL = 'users.Utilisateur'
 
 # Database
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv("DB_NAME"),
-        'USER': os.getenv("DB_USER"),
-        'PASSWORD': os.getenv("DB_PASSWORD"),
-        'HOST': os.getenv("DB_HOST"),
-        'PORT': os.getenv("DB_PORT"),
-    }
+    'default': dj_database_url.config(
+        default=os.getenv("DATABASE_URL"),
+        conn_max_age=600,
+        ssl_require=False
+    )
 }
+
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -102,8 +113,17 @@ USE_I18N = True
 USE_TZ = True
 
 # Static files
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 
 # REST Framework
 REST_FRAMEWORK = {
