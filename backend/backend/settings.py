@@ -18,6 +18,8 @@ if not SECRET_KEY:
     raise Exception("DJANGO_SECRET_KEY n'est pas défini ! Vérifie ton .env")
 
 
+SECURE_SSL_REDIRECT = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
