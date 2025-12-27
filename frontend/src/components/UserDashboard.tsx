@@ -10,6 +10,7 @@ import HistoriqueComponent from './pages/Historique';
 import AjoutAlerteComponent from './pages/AjoutAlerte';     
 import AffichageAnnonceComponent from './pages/AffichageAnnonce'; 
 import ListeAlerteComponent, { type ListeAlerteProps, type Alerte } from './pages/ListeAlerte';
+import { ALERTES_API_URL, ANNONCES_API_URL } from "../lib/api";
 
 // --- Nouveaux Types pour la gestion des alertes ---
 interface AlertParams {
@@ -32,10 +33,6 @@ interface Tab {
     component: React.FC<any>;
     notificationCount?: number;
 }
-
-// URLs des APIs
-const ALERTES_API_URL = 'http://localhost:8000/api/alertes/';
-const ANNONCES_API_URL = 'http://localhost:8000/api/annonces/';
 
 // --- Configuration des Onglets ---
 const tabs: Tab[] = [

@@ -10,6 +10,7 @@ import HistoriqueComponent from './pages/Historique.tsx';
 import AnnoncezComponent from './pages/Annoncez.tsx';     
 import AffichageAnnonceAdmin from './pages/AffichageAnnonceAdmin.tsx'; 
 import ListeAlerteAdmin, { type ListeAlerteProps, type Alerte } from './pages/ListeAlerteAdmin.tsx'; 
+import { ALERTES_API_URL, ANNONCES_API_URL } from "../lib/api";
 
 interface AlertParams {
     lat: number;
@@ -30,11 +31,6 @@ interface Tab {
     component: React.FC<any>;
     notificationCount?: number;
 }
-
-// URLs des APIs
-const ALERTES_API_URL = 'http://localhost:8000/api/alertes/';
-const ANNONCES_API_URL = 'http://localhost:8000/api/annonces/';
-
 const tabs: Tab[] = [
     { id: "carte", label: "Carte", icon: Map, component: CarteComponent },
     { id: "historique", label: "Historique", icon: History, component: HistoriqueComponent },

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import axios from "axios";
 import "leaflet/dist/leaflet.css";
-
+import { ALERTES_API_URL} from "../lib/api";
 // Interface non modifiée
 type Alerte = {
   id: number;
@@ -17,8 +17,13 @@ export default function MapView() {
   const [alertes, setAlertes] = useState<Alerte[]>([]);
   
   useEffect(() => {
-    axios.get("http://127.0.0.1:8000/api/alertes/").then(r => setAlertes(r.data));
-  }, []);
+  axios.get(ALERTES_API_URL)
+    .then(r => setAlertes(r.data))
+    .catch(err => {
+      console.error("Erreur chargement alertes :", err);
+    });
+}, []);
+
 
   return (
     <MapContainer center={[-18.9, 47.5] as [number, number]} zoom={8} className="h-[80vh] w-full shadow-lg rounded-lg">

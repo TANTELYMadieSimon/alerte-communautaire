@@ -3,7 +3,7 @@
 import type React from "react"
 import { useState, useEffect, useCallback } from "react"
 import { Wrench, Ban, Calendar, AlertTriangle, Speaker, Clock, Loader2, X, Search } from "lucide-react"
-
+import { ANNONCES_API_URL } from "../../lib/api";
 // Interface adaptée à ta DB
 interface Annonce {
   id: number
@@ -12,8 +12,6 @@ interface Annonce {
   date_publication: string
   photo: string | null
 }
-
-const API_URL = "http://localhost:8000/api/annonces/"
 
 interface ImageModalProps {
   imageUrl: string
@@ -186,7 +184,7 @@ export default function AffichageAnnonce() {
     const fetchAnnonces = async () => {
       try {
         setLoading(true)
-        const res = await fetch(API_URL)
+        const res = await fetch(ANNONCES_API_URL)
         if (!res.ok) throw new Error(`HTTP ${res.status}`)
         const data: Annonce[] = await res.json()
         console.log("Annonces reçues →", data)

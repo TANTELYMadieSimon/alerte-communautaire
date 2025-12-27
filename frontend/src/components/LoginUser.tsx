@@ -1,10 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { User, Mail, Phone, Camera,BellRing, Eye, EyeOff } from 'lucide-react';
 
+import { USERS_API } from "../lib/api";
 // Service pour appeler l'API Django (version utilisateur)
 const djangoUserAPI = {
-  baseURL: 'http://localhost:8000',
-
   async createUser(userData: any) {
     const formData = new FormData();
     
@@ -20,7 +19,7 @@ const djangoUserAPI = {
       formData.append('profile_photo', blob, 'profile.jpg');
     }
 
-    const response = await fetch(`${this.baseURL}/api/users/create/`, {
+  const response = await fetch(`${USERS_API}/create/`, {
       method: 'POST',
       credentials: 'include',
       body: formData,
@@ -40,7 +39,7 @@ const djangoUserAPI = {
   },
 
   async loginUser(credentials: any) {
-    const response = await fetch(`${this.baseURL}/api/users/login/`, {
+    const response = await fetch(`${USERS_API}/create/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -59,7 +58,7 @@ const djangoUserAPI = {
   },
 
   async logoutUser() {
-    const response = await fetch(`${this.baseURL}/api/users/logout/`, {
+     const response = await fetch(`${USERS_API}/logout/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -77,7 +76,7 @@ const djangoUserAPI = {
   },
 
   async getUserProfile() {
-    const response = await fetch(`${this.baseURL}/api/users/profile/`, {
+     const response = await fetch(`${USERS_API}/profile/`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

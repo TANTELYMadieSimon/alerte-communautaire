@@ -3,9 +3,7 @@
 import type React from "react"
 import { useState } from "react"
 import { Megaphone, UploadCloud, X, Loader2, CheckCircle } from 'lucide-react' 
-
-// --- NOUVEAU: URL de l'API Django ---
-const API_URL = 'http://localhost:8000/api/annonces/';
+import { ANNONCES_API_URL } from "../../lib/api";
 
 export default function Annoncez() {
   const [selectedType, setSelectedType] = useState<string>("")
@@ -54,7 +52,7 @@ export default function Annoncez() {
         }
 
         // 2. Appel API réel à l'endpoint Django
-        const response = await fetch(API_URL, {
+        const response = await fetch(ANNONCES_API_URL, {
             method: 'POST',
             // Le Content-Type est automatiquement défini par le navigateur pour FormData
             body: formData, 

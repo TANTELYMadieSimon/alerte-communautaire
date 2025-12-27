@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import axios from "axios"
 import { X, CheckCircle, Megaphone } from "lucide-react"
-
+import { ALERTES_API_URL } from "../../lib/api";
 export default function AjoutAlerte() {
   const [selectedType, setSelectedType] = useState("")
   const [description, setDescription] = useState("")
@@ -73,7 +73,7 @@ export default function AjoutAlerte() {
     if (photo) formData.append("photo", photo); // ajout photo facultative
 
     try {
-      await axios.post("http://127.0.0.1:8000/api/alertes/", formData, {
+      await axios.post(ALERTES_API_URL, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       

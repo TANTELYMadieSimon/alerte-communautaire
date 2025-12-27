@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { MapPin, ArrowRight, ListChecks, Loader2, X, Check, Search, Clock } from 'lucide-react';
-
+import { ALERTES_API_URL } from "../../lib/api";
 export type Alerte = {
   id: number;
   type_alerte: string;
@@ -18,7 +18,6 @@ export interface ListeAlerteProps {
   goToMapWithAlert: (params: { lat: number; lng: number; nomLieu: string }) => void;
 }
 
-const API_URL = 'http://localhost:8000/api/alertes/';
 
 // Types d'alerte disponibles pour le filtre
 const ALERT_TYPES = [
@@ -285,7 +284,7 @@ const ListeAlerteComponent: React.FC<ListeAlerteProps> = ({ goToMapWithAlert }) 
   const fetchAlerts = useCallback(async () => {
     try {
       setIsLoading(true);
-      const response = await fetch(API_URL);
+      const response = await fetch(ALERTES_API_URL);
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const data: Alerte[] = await response.json();
       
@@ -320,7 +319,7 @@ const ListeAlerteComponent: React.FC<ListeAlerteProps> = ({ goToMapWithAlert }) 
   // Fonction pour marquer une alerte comme terminée
   const handleTerminerAlerte = async (id: number) => {
     try {
-      const res = await fetch(`${API_URL}${id}/`, {
+      const res = await fetch(`${ALERTES_API_URL}${id}/`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

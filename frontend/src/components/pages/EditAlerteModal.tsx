@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { X } from "lucide-react";
 import type { Alerte } from "./ListeAlerte";
-
+import { ALERTES_API_URL } from "../../lib/api";
 interface EditAlerteModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -50,7 +50,7 @@ const EditAlerteModal: React.FC<EditAlerteModalProps> = ({ isOpen, onClose, aler
       // On n'envoie PAS l'adresse → elle reste inchangée
       if (newImage) formDataToSend.append("photo", newImage);
 
-      const res = await fetch(`http://localhost:8000/api/alertes/${formData.id}/`, {
+      const res = await fetch(`${ALERTES_API_URL}${formData.id}/`, {
         method: "PUT",
         body: formDataToSend,
       });

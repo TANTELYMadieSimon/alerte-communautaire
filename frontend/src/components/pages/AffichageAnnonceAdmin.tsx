@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react"
 import { Edit, Trash2, Clock, X, Loader2, CheckCircle, Search } from "lucide-react"
-
+import { ANNONCES_API_URL } from "../../lib/api";
 interface Annonce {
   id: number
   titre: string
@@ -10,8 +10,6 @@ interface Annonce {
   date_publication: string
   photo: string | null
 }
-
-const API_URL = "http://localhost:8000/api/annonces/"
 
 // === MODAL DE SUCCÈS ===
 const SuccessModal: React.FC<{ 
@@ -175,7 +173,7 @@ const EditModal: React.FC<{
     fd.append("message", formData.message)
     if (newImage) fd.append("photo", newImage)
 
-    const res = await fetch(`${API_URL}${formData.id}/`, {
+    const res = await fetch(`${ANNONCES_API_URL}${formData.id}/`, {
       method: "PUT",
       body: fd,
     })
@@ -355,7 +353,7 @@ export default function AffichageAnnonceAdmin() {
     const fetchAnnonces = async () => {
       try {
         setLoading(true);
-        const res = await fetch(API_URL);
+        const res = await fetch(ANNONCES_API_URL);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data: Annonce[] = await res.json();
         setAnnonces(data);
@@ -375,7 +373,7 @@ export default function AffichageAnnonceAdmin() {
   }, [filter, annonces]);
 
   const handleDelete = async (id: number) => {
-    const res = await fetch(`${API_URL}${id}/`, { method: "DELETE" })
+    const res = await fetch(`${ANNONCES_API_URL}${id}/`, { method: "DELETE" })
     if (res.ok) {
       setAnnonces((prev) => prev.filter((a) => a.id !== id))
       setSuccessModal({ isOpen: true, message: "Annonce supprimée avec succès" })

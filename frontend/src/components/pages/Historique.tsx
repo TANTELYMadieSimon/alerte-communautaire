@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { BarChart, ListOrdered } from "lucide-react"
-
+import { ALERTES_API_URL } from "../../lib/api";
 // ✅ Interfaces (inchangées)
 interface ChartItem {
   name: string
@@ -70,7 +70,7 @@ export default function Historique() {
 
   // 🛑 CHARGEMENT DES ALERTES
   useEffect(() => {
-    fetch("http://localhost:8000/api/alertes/")
+    fetch(ALERTES_API_URL)
       .then((res) => res.json())
       .then((data) => {
         setAlertes(data);
