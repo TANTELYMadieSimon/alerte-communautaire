@@ -39,7 +39,7 @@ const djangoUserAPI = {
   },
 
   async loginUser(credentials: any) {
-    const response = await fetch(`${USERS_API}/create/`, {
+    const response = await fetch(`${USERS_API}/login/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
