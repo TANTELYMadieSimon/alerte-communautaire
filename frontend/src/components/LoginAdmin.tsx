@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { User, Mail, Phone, Camera, BellRing, Eye, EyeOff } from 'lucide-react';
-import { USERS_API } from "../lib/api";
+import { ADMINS_API } from "../lib/api";
 // Service pour appeler l'API Django (version admin)
 const djangoAdminAPI = {
  
@@ -22,7 +22,7 @@ const djangoAdminAPI = {
     }
 
     
-      const response = await fetch(`${USERS_API}/create/`, {
+      const response = await fetch(`${ ADMINS_API }create/`, {
       method: 'POST',
       credentials: 'include',
       body: formData,
@@ -42,7 +42,7 @@ const djangoAdminAPI = {
   },
 
   async loginAdmin(credentials: any) {
-    const response = await fetch(`${USERS_API}/login/`, {
+    const response = await fetch(`${ ADMINS_API }login/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -61,7 +61,7 @@ const djangoAdminAPI = {
   },
 
   async logoutAdmin() {
-    const response = await fetch(`${USERS_API}/logout/`, {
+    const response = await fetch(`${ ADMINS_API }logout/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -79,7 +79,7 @@ const djangoAdminAPI = {
   },
 
   async getAdminProfile() {
-   const response = await fetch(`${USERS_API}/profile/`, {
+   const response = await fetch(`${ ADMINS_API }profile/`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

@@ -50,6 +50,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),  
     path('api/', include(router.urls)),  
     
+    path('api/', include('users.urls')),  
     #  AJOUTEZ CES URLs DIRECTEMENT
     # URLs Admin
     path('api/admins/login/', users_views.admin_login, name='admin-login'),

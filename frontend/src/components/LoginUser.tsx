@@ -19,7 +19,7 @@ const djangoUserAPI = {
       formData.append('profile_photo', blob, 'profile.jpg');
     }
 
-  const response = await fetch(`${USERS_API}/create/`, {
+  const response = await fetch(`${USERS_API}create/`, {
       method: 'POST',
       credentials: 'include',
       body: formData,
@@ -39,7 +39,7 @@ const djangoUserAPI = {
   },
 
   async loginUser(credentials: any) {
-    const response = await fetch(`${USERS_API}/login/`, {
+    const response = await fetch(`${USERS_API}login/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -58,7 +58,7 @@ const djangoUserAPI = {
   },
 
   async logoutUser() {
-     const response = await fetch(`${USERS_API}/logout/`, {
+     const response = await fetch(`${USERS_API}logout/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -76,7 +76,7 @@ const djangoUserAPI = {
   },
 
   async getUserProfile() {
-     const response = await fetch(`${USERS_API}/profile/`, {
+     const response = await fetch(`${USERS_API}profile/`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

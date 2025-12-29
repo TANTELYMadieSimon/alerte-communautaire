@@ -1,9 +1,8 @@
 export const API_URL = import.meta.env.VITE_API_URL;
-
-// ✅ TOUJOURS inclure /api
+export const USERS_API = `${API_URL}/api/users/`;
+export const ADMINS_API = `${API_URL}/api/admins/`;
 export const ALERTES_API_URL = `${API_URL}/api/alertes/`;
 export const ANNONCES_API_URL = `${API_URL}/api/annonces/`;
-export const USERS_API = `${API_URL}/api/users/`;
 
 // Fonction utilitaire pour les appels API
 export const fetchAPI = async (url: string, options: RequestInit = {}) => {
@@ -48,14 +47,14 @@ export const fetchAPI = async (url: string, options: RequestInit = {}) => {
 
 // Fonctions spécifiques
 export const loginUser = async (data: any) => {
-  return fetchAPI(`${API_URL}/api/login/`, {
+  return fetchAPI(`${USERS_API}login/`, {
     method: "POST",
     body: JSON.stringify(data),
   });
 };
 
 export const loginAdmin = async (data: any) => {
-  return fetchAPI(`${USERS_API}/login/`, {
+  return fetchAPI(`${ADMINS_API}login/`, {
     method: "POST",
     body: JSON.stringify(data),
   });
@@ -64,7 +63,17 @@ export const loginAdmin = async (data: any) => {
 export const createUser = async (data: any) => {
   const formData = new FormData();
   // ... remplissez formData
-  return fetchAPI(`${USERS_API}/create/`, {
+  return fetchAPI(`${USERS_API}create/`, {
+    method: "POST",
+    headers: {}, // Pas de Content-Type pour FormData
+    body: formData,
+  });
+};
+
+export const createAdmin = async (data: any) => {
+  const formData = new FormData();
+  // ... remplissez formData
+  return fetchAPI(`${ADMINS_API}create/`, {
     method: "POST",
     headers: {}, // Pas de Content-Type pour FormData
     body: formData,
